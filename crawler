@@ -33,15 +33,17 @@ l = len(ulink)
 soup = BeautifulSoup(resp, from_encoding=resp.info().get_param('charset'))
 
 def search(t):
+    print(k.result)
     score = 0
     for link in soup.find_all('a', href=True):
         s = link['href']
         if k.result.lower() in link.get_text(strip=True).lower():
             score+=1
-            print("\n\n\n" + link.get_text(strip=True))
+            print("\n\n\n"+str(score)+')' + link.get_text(strip=True)+'\n')
             print('<VISIT>')
             print(s) if s[:7]=='https:/' else print('https:/'+s)
     if score<1:
-        print('Sorry! No recent news datas!')
+        print('Sorry! No recent news data!')
+    print('\n\n\n')
             
 b.on_click(search)
