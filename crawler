@@ -1,0 +1,47 @@
+from __future__  import print_function
+from ipywidgets import interact, interactive
+import ipywidgets as widgets
+import requests as req
+from bs4 import BeautifulSoup
+import urllib.request
+
+def f(Enter_Field):
+    if Enter_Field=='all':
+        return ""
+    else:
+        return Enter_Field
+    
+def k(Key_Phrase):
+    return Key_Phrase
+
+
+s = interactive(f,Enter_Field = ['all','entertainment','world','us','politics','health','lifestyle','business','science','tech','tv'],continuous_update = True)
+display(s)
+s.layout.margin = '10px 200px'
+k = interactive(k,Key_Phrase='',continuous_update = True)
+display(k)
+k.layout.margin = '10px 200px'
+b = widgets.Button(description="Search")
+display(b)
+b.layout.margin = '10px 0px 100px 250px'
+b.layout.height = '40px'
+b.style.button_color = 'orange'
+
+ulink = 'https://www.foxnews.com/' + s.result
+resp = urllib.request.urlopen(ulink)
+l = len(ulink)
+soup = BeautifulSoup(resp, from_encoding=resp.info().get_param('charset'))
+
+def search(t):
+    score = 0
+    for link in soup.find_all('a', href=True):
+        s = link['href']
+        if k.result.lower() in link.get_text(strip=True).lower():
+            score+=1
+            print("\n\n\n" + link.get_text(strip=True))
+            print('<VISIT>')
+            print(s) if s[:7]=='https:/' else print('https:/'+s)
+    if score<1:
+        print('Sorry! No recent news datas!')
+            
+b.on_click(search)
